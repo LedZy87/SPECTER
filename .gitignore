@@ -1,0 +1,6 @@
+﻿v10_*.sh
+specter_build.sh
+*.log
+*.pid
+.specter_tmp.sh
+.git/
