@@ -515,9 +515,9 @@ _glitch() {
     printf "\r  "
     for (( i=0; i<${#text}; i++ )); do
       if (( RANDOM % 3 == 0 )); then
-        printf "\033[0;36m${G:$((RANDOM % ${#G})):1}\033[0m"
+        printf "\033[0;36m%s\033[0m" "${G:$((RANDOM % ${#G})):1}"
       else
-        printf "\033[1;36m${text:$i:1}\033[0m"
+        printf "\033[1;36m%s\033[0m" "${text:$i:1}"
       fi
     done
     sleep 0.07
