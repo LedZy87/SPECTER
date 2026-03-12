@@ -291,7 +291,7 @@ This tool provides no offensive capabilities. It does not bypass any specific or
 
 [![GitHub Profile](https://img.shields.io/badge/GitHub-LedZy87-ff0000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LedZy87)
 [![Star SPECTER](https://img.shields.io/badge/⭐_Star_this_repo-ff0000?style=for-the-badge)](https://github.com/LedZy87/SPECTER/stargazers)
-[![Website](https://img.shields.io/badge/🌍_vpmindustria.eu-ff0000?style=for-the-badge)](https://vpmindustria.eu)
+
 
 </div>
 
