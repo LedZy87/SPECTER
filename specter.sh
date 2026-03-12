@@ -216,14 +216,11 @@ fail()    { _log "${RED}  ✗${RESET}  $*"; }
 timeline() {
   local MSG="$1"
   local TS; TS=$(date '+%Y-%m-%d %H:%M:%S')
-  local LOG
-  if [[ -d "${RAMDISK_MOUNT}" ]]; then
-    LOG="${TIMELINE_FILE}"
-  else
-    mkdir -p /dev/shm/specter 2>/dev/null || true
-    LOG="/dev/shm/specter/.timeline.log"
+  if [[ ! -d "${RAMDISK_MOUNT}" ]]; then
+    mkdir -p "${RAMDISK_MOUNT}" 2>/dev/null || true
+    mount -t tmpfs -o size=512m,mode=700 tmpfs "${RAMDISK_MOUNT}" 2>/dev/null || true
   fi
-  echo "[$TS] $MSG" >> "$LOG" 2>/dev/null || true
+  echo "[$TS] $MSG" >> "${TIMELINE_FILE}" 2>/dev/null || true
   step "Timeline: $MSG"
 }
 
