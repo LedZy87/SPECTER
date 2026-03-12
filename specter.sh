@@ -571,7 +571,7 @@ _spinner_start() {
   (
     while true; do
       printf "\r  \033[0;36m${sp:$((i % 10)):1}\033[0m  %s" "$msg"
-      (( i++ ))
+      i=$((i + 1))
       sleep "$_SPIN"
     done
   ) &
@@ -1450,8 +1450,8 @@ mitigate_covert_channels() {
 
   # Flush CPU microarchitectural state on context switch
   if [[ -d /sys/kernel/debug/x86 ]]; then
-    echo 1 > /sys/kernel/debug/x86/ibrs_enabled 2>/dev/null || true
-    echo 1 > /sys/kernel/debug/x86/ibpb_enabled 2>/dev/null || true
+    ( echo 1 > /sys/kernel/debug/x86/ibrs_enabled ) 2>/dev/null || true
+    ( echo 1 > /sys/kernel/debug/x86/ibpb_enabled ) 2>/dev/null || true
   fi
 
   # Spectre/Meltdown mitigations
@@ -1652,8 +1652,11 @@ EOF
   while ! curl -sf --socks5-hostname 127.0.0.1:9050 --max-time 5 \
           https://check.torproject.org/api/ip &>/dev/null; do
     sleep 3
-    ((TRIES++))
-    (( TRIES >= 15 )) && { warn "Tor bootstrap timeout — continuing"; break; }
+    TRIES=$((TRIES + 1))
+    if [[ $TRIES -ge 15 ]]; then
+      warn "Tor bootstrap timeout — continuing"
+      break
+    fi
   done
 
   ok "Tor configured: SOCKS=9050, Trans=9040, DNS=5353, Control=9051"
@@ -1994,7 +1997,7 @@ verify_tor() {
       timeline "Tor verified: exit=$IP"
       return 0
     fi
-    ((TRIES++))
+    TRIES=$((TRIES + 1))
     step "Attempt $TRIES/$MAX_TRIES — waiting for Tor..."
     sleep 3
   done
@@ -3164,10 +3167,10 @@ strip_file() {
   # Fallback: exiftool
   if command -v exiftool &>/dev/null; then
     exiftool -overwrite_original -all= "$F" 2>/dev/null && \
-      ((STRIPPED++)) && return 0
+      STRIPPED=$((STRIPPED + 1)); return 0
   fi
 
-  ((FAILED++))
+  FAILED=$((FAILED + 1))
 }
 
 if [[ -f "$TARGET" ]]; then
@@ -3257,7 +3260,7 @@ DIR="${1:?Usage: sanitize-all <directory>}"
 COUNT=0
 find "$DIR" -name "*.pdf" -type f | while read -r PDF; do
   echo "[*] Processing: $PDF"
-  sanitize-pdf "$PDF" "${PDF%.pdf}_clean.pdf" 2>/dev/null && ((COUNT++))
+  sanitize-pdf "$PDF" "${PDF%.pdf}_clean.pdf" 2>/dev/null && ((COUNT++)) || true
 done
 echo "[+] Processed $COUNT PDFs"
 SCRIPT
@@ -3480,7 +3483,7 @@ if [[ -n "$URLS" ]]; then
   while IFS= read -r URL; do
     if echo "$URL" | grep -qiE "$TRACKING_KEYWORDS"; then
       echo "    [!] Tracking URL: $URL"
-      ((ALERTS++))
+      ALERTS=$((ALERTS + 1))
     else
       echo "    [*] URL: $URL"
     fi
@@ -3491,7 +3494,7 @@ fi
 echo "  [2] Tracking pixels..."
 if grep -qiE '(width=.?1.? height=.?1|height=.?1.? width=.?1)' "$FILE" 2>/dev/null; then
   echo "    [!] Possible 1x1 tracking pixel found"
-  ((ALERTS++))
+  ALERTS=$((ALERTS + 1))
 fi
 
 # Check 3: UUID/fingerprint markers
@@ -3501,14 +3504,14 @@ UUIDS=$(grep -aoE '[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}'
 if [[ -n "$UUIDS" ]]; then
   echo "    [!] UUIDs found (possible fingerprint tokens):"
   echo "$UUIDS" | while read -r U; do echo "       $U"; done
-  ((ALERTS++))
+  ALERTS=$((ALERTS + 1))
 fi
 
 # Check 4: Embedded JavaScript
 echo "  [4] Embedded JavaScript..."
 if grep -qiE '(<script|javascript:|eval\(|document\.write|window\.open)' "$FILE" 2>/dev/null; then
   echo "    [!] JavaScript detected"
-  ((ALERTS++))
+  ALERTS=$((ALERTS + 1))
 fi
 
 # Check 5: GPS/location metadata
@@ -3518,7 +3521,7 @@ if command -v exiftool &>/dev/null; then
   if [[ -n "$GPS" ]]; then
     echo "    [!] Location data found:"
     echo "$GPS" | while read -r L; do echo "       $L"; done
-    ((ALERTS++))
+    ALERTS=$((ALERTS + 1))
   else
     echo "    ✓ No GPS metadata"
   fi
@@ -3532,7 +3535,7 @@ if command -v exiftool &>/dev/null; then
   if [[ -n "$META" ]]; then
     echo "    [!] Identity metadata:"
     echo "$META" | while read -r M; do echo "       $M"; done
-    ((ALERTS++))
+    ALERTS=$((ALERTS + 1))
   else
     echo "    ✓ No author metadata"
   fi
@@ -4595,7 +4598,7 @@ start_monitor() {
       if ! pgrep -x tor &>/dev/null; then
         echo "[\$TS] [!] Tor process NOT running" >> "\$LOG"
         DISPLAY=:0 notify-send -u critical "OPSEC Alert" "Tor is DOWN!" 2>/dev/null || true
-        ((ISSUES++))
+        ISSUES=$((ISSUES + 1))
       fi
 
       # Check 2: Tor exit confirmed
@@ -4603,26 +4606,26 @@ start_monitor() {
         --max-time 10 https://check.torproject.org/api/ip 2>/dev/null)
       if ! echo "\$TOR_CHECK" | grep -q '"IsTor":true'; then
         echo "[\$TS] [!] Tor not active for traffic" >> "\$LOG"
-        ((ISSUES++))
+        ISSUES=$((ISSUES + 1))
       fi
 
       # Check 3: DNS going through Tor (port 5353)
       if ! ss -unl 2>/dev/null | grep -q ':5353'; then
         echo "[\$TS] [!] Tor DNS (port 5353) not listening" >> "\$LOG"
-        ((ISSUES++))
+        ISSUES=$((ISSUES + 1))
       fi
 
       # Check 4: UFW active
       if command -v ufw &>/dev/null && ! ufw status 2>/dev/null | grep -q "active"; then
         echo "[\$TS] [!] UFW firewall is INACTIVE" >> "\$LOG"
         DISPLAY=:0 notify-send -u critical "OPSEC Alert" "UFW firewall down!" 2>/dev/null || true
-        ((ISSUES++))
+        ISSUES=$((ISSUES + 1))
       fi
 
       # Check 5: iptables DROP policy intact
       if ! iptables -L OUTPUT 2>/dev/null | grep -q "DROP\|Tor"; then
         echo "[\$TS] [!] iptables kill switch may be inactive" >> "\$LOG"
-        ((ISSUES++))
+        ISSUES=$((ISSUES + 1))
       fi
 
       # Check 6: No unexpected outbound connections (non-Tor)
@@ -4633,13 +4636,13 @@ start_monitor() {
         echo "[\$TS] [!] Unexpected outbound connections:" >> "\$LOG"
         echo "\$UNEXPECTED" >> "\$LOG"
         DISPLAY=:0 notify-send -u critical "OPSEC Alert" "Unexpected network connection!" 2>/dev/null || true
-        ((ISSUES++))
+        ISSUES=$((ISSUES + 1))
       fi
 
       # Check 7: IPv6 still disabled
       if [[ "\$(cat /proc/sys/net/ipv6/conf/all/disable_ipv6 2>/dev/null)" != "1" ]]; then
         echo "[\$TS] [!] IPv6 not disabled" >> "\$LOG"
-        ((ISSUES++))
+        ISSUES=$((ISSUES + 1))
       fi
 
       if (( ISSUES == 0 )); then
@@ -4711,7 +4714,7 @@ start_lan() {
       GW_COUNT=\$(ip route show default 2>/dev/null | wc -l)
       if (( GW_COUNT > 1 )); then
         echo "[\$TS] [!] Multiple default gateways detected (\$GW_COUNT)" >> "\$LOG"
-        ((ISSUES++))
+        ISSUES=$((ISSUES + 1))
       fi
 
       # Check 3: Duplicate MACs on network (MITM indicator)
@@ -4953,7 +4956,7 @@ lspci 2>/dev/null | md5sum > /tmp/.pci_current.md5
 if [[ -f /tmp/.pci_baseline.md5 ]]; then
   if ! diff -q /tmp/.pci_baseline.md5 /tmp/.pci_current.md5 &>/dev/null; then
     echo "    [!] PCI device list CHANGED since last check!"
-    ((ALERTS++))
+    ALERTS=$((ALERTS + 1))
   else
     echo "    ✓ PCI devices unchanged"
   fi
@@ -4968,7 +4971,7 @@ if [[ -f /tmp/.usb_baseline.md5 ]]; then
   if ! diff -q /tmp/.usb_baseline.md5 /tmp/.usb_current.md5 &>/dev/null; then
     echo "    [!] USB devices CHANGED: $(lsusb 2>/dev/null | wc -l) devices now"
     lsusb 2>/dev/null
-    ((ALERTS++))
+    ALERTS=$((ALERTS + 1))
   else
     echo "    ✓ USB devices unchanged"
   fi
@@ -4998,7 +5001,7 @@ echo "  [4] Camera/mic modules..."
 if lsmod | grep -q "uvcvideo\|snd_hda"; then
   echo "    [!] Camera/mic kernel modules loaded!"
   lsmod | grep -E "uvcvideo|snd_hda" | awk '{print "    " $0}'
-  ((ALERTS++))
+  ALERTS=$((ALERTS + 1))
 else
   echo "    ✓ Camera/mic modules not loaded"
 fi
@@ -5064,7 +5067,7 @@ if command -v aide &>/dev/null && [[ -f /var/lib/aide/aide.db ]]; then
   if [[ -n "$AIDE_OUT" ]]; then
     echo "    [!] AIDE found changes:"
     echo "$AIDE_OUT" | while read -r L; do echo "      $L"; done
-    ((ISSUES++))
+    ISSUES=$((ISSUES + 1))
   else
     echo "    ✓ AIDE: no unauthorized changes"
   fi
@@ -5116,7 +5119,7 @@ calculate_opsec_score() {
     local DESC="$1"
     local RESULT="$2"  # 0=fail, 1=pass
     if (( RESULT == 1 )); then
-      ((SCORE++))
+      SCORE=$((SCORE + 1))
       DETAILS+=("  ${GREEN}✓${RESET} $DESC")
     else
       DETAILS+=("  ${RED}✗${RESET} $DESC")
@@ -5854,7 +5857,7 @@ if [[ $COUNT -gt 0 ]]; then
   # Also block via iptables (belt-and-suspenders)
   while IFS= read -r IP; do
     [[ "$IP" =~ ^[0-9]+\.[0-9]+\.[0-9]+\.[0-9]+$ ]] || continue
-    iptables -I OUTPUT -d "$IP" -j DROP 2>/dev/null && ((BLOCKED++))
+    iptables -I OUTPUT -d "$IP" -j DROP 2>/dev/null && ((BLOCKED++)) || true
   done < <(grep -E '^[0-9]+\.' "$BLOCKLIST_FILE" 2>/dev/null | head -200)
 
   echo "[+] Blocked $BLOCKED bad exit IPs via iptables"
@@ -5996,7 +5999,7 @@ if echo "$TOR_RESP" | grep -q '"IsTor":true'; then
   echo -e "      \033[32m✓\033[0m Tor exit IP: $EXIT_IP"
 else
   echo -e "      \033[31m✗\033[0m NOT routing through Tor!"
-  ((LEAKS++))
+  LEAKS=$((LEAKS + 1))
 fi
 
 # ── Test 2: Clearnet IP (should be blocked) ───────────────
@@ -6004,7 +6007,7 @@ echo "  [2] Clearnet IP (should be unreachable)..."
 CLEAR_IP=$(curl -sf --max-time 5 https://ifconfig.me 2>/dev/null)
 if [[ -n "$CLEAR_IP" ]]; then
   echo -e "      \033[31m✗\033[0m Clearnet IP REACHABLE: $CLEAR_IP — kill switch may be broken!"
-  ((LEAKS++))
+  LEAKS=$((LEAKS + 1))
 else
   echo -e "      \033[32m✓\033[0m Clearnet blocked (kill switch active)"
 fi
@@ -6026,7 +6029,7 @@ if [[ "$DNS_SERVER" == "127.0.0.1" ]]; then
   echo -e "      \033[32m✓\033[0m DNS resolver: 127.0.0.1 (Tor) — no DNS leak"
 else
   echo -e "      \033[31m✗\033[0m DNS resolver: $DNS_SERVER — potential DNS leak!"
-  ((LEAKS++))
+  LEAKS=$((LEAKS + 1))
 fi
 
 # ── Test 4: IPv6 leak ─────────────────────────────────────
@@ -6038,7 +6041,7 @@ else
   IPV6_ADDR=$(ip -6 addr show 2>/dev/null | grep "inet6" | grep -v "::1\|fe80" | head -1)
   if [[ -n "$IPV6_ADDR" ]]; then
     echo -e "      \033[31m✗\033[0m IPv6 address detected: $IPV6_ADDR — possible leak!"
-    ((LEAKS++))
+    LEAKS=$((LEAKS + 1))
   else
     echo -e "      \033[32m✓\033[0m No public IPv6 address"
   fi
@@ -6051,7 +6054,7 @@ WEBRTC_PROC=$(ps -ef 2>/dev/null | grep -E "firefox|chromium" | grep -v grep | h
 if [[ -n "$WEBRTC_PROC" ]]; then
   echo -e "      \033[33m!\033[0m Browser running — verify WebRTC disabled in browser settings"
   echo -e "      \033[33m!\033[0m Run: harden-browser && restart browser"
-  ((LEAKS++))
+  LEAKS=$((LEAKS + 1))
 else
   echo -e "      \033[32m✓\033[0m No browser running (WebRTC not exposed)"
 fi
@@ -6064,7 +6067,7 @@ if (( SWAP_ACTIVE == 0 )); then
 else
   echo -e "      \033[31m✗\033[0m Swap ACTIVE — research data may be written to disk!"
   swapon --show 2>/dev/null | while read L; do echo "      $L"; done
-  ((LEAKS++))
+  LEAKS=$((LEAKS + 1))
 fi
 
 # ── Test 7: Unexpected outbound connections ───────────────
@@ -7193,15 +7196,15 @@ while IFS= read -r LINE; do
   FP="\$(echo "\$LINE" | awk '{print \$2}')"
   if [[ ! -f "\$FP" ]]; then
     echo -e "  \${YELLOW}[?]\${RESET} MISSING  : \$FP"
-    (( MISSING++ ))
+    MISSING=$((MISSING + 1))
   else
     ACT="\$(sha256sum "\$FP" | awk '{print \$1}')"
     if [[ "\$ACT" == "\$EXP" ]]; then
       echo -e "  \${GREEN}[✓]\${RESET} OK       : \$FP"
-      (( PASS++ ))
+      PASS=$((PASS + 1))
     else
       echo -e "  \${RED}[✗] MODIFIED : \$FP\${RESET}"
-      (( FAIL++ ))
+      FAIL=$((FAIL + 1))
     fi
   fi
 done < "\$HASH_DB"
@@ -8992,10 +8995,10 @@ PASS=0; FAIL=0; WARN=0
 echo -e "  ${CYAN}[1/4]${RESET} Apt GPG key integrity..."
 if apt-key list 2>/dev/null | grep -qi "expired\|NO_PUBKEY"; then
   echo -e "  ${YELLOW}[!]${RESET} Expired or missing apt keys detected"
-  (( WARN++ ))
+  WARN=$((WARN + 1))
 else
   echo -e "  ${GREEN}[✓]${RESET} All apt signing keys valid"
-  (( PASS++ ))
+  PASS=$((PASS + 1))
 fi
 
 # ── 2. Verify installed package integrity ─────────────────────
@@ -9005,15 +9008,15 @@ if command -v debsums > /dev/null; then
   if [[ -n "$BAD" ]]; then
     echo -e "  ${RED}[!!!] PACKAGE TAMPERING DETECTED:${RESET}"
     echo "$BAD"
-    (( FAIL++ ))
+    FAIL=$((FAIL + 1))
   else
     echo -e "  ${GREEN}[✓]${RESET} tor, gpg, curl — checksums OK"
-    (( PASS++ ))
+    PASS=$((PASS + 1))
   fi
 else
   apt-get install -y -q debsums 2>/dev/null || true
   echo -e "  ${YELLOW}[?]${RESET} debsums installed — re-run supply-check"
-  (( WARN++ ))
+  WARN=$((WARN + 1))
 fi
 
 # ── 3. Verify Tor binary signature ────────────────────────────
@@ -9030,14 +9033,14 @@ echo -e "  ${CYAN}[4/4]${RESET} Scanning for known rootkit signatures..."
 if command -v rkhunter > /dev/null; then
   rkhunter --check --sk --nocolors 2>/dev/null | grep -E "Warning|Infected" | head -5 || \
     echo -e "  ${GREEN}[✓]${RESET} rkhunter: no warnings"
-  (( PASS++ ))
+  PASS=$((PASS + 1))
 elif command -v chkrootkit > /dev/null; then
   chkrootkit 2>/dev/null | grep -v "not infected\|nothing found" | head -5 || \
     echo -e "  ${GREEN}[✓]${RESET} chkrootkit: clean"
-  (( PASS++ ))
+  PASS=$((PASS + 1))
 else
   echo -e "  ${YELLOW}[?]${RESET} Install rkhunter for rootkit check: apt install rkhunter"
-  (( WARN++ ))
+  WARN=$((WARN + 1))
 fi
 
 echo ""
@@ -9295,10 +9298,10 @@ while IFS= read -r LINE; do
   CALC_HMAC="\$(echo -n "\$ENTRY" | openssl dgst -sha256 -hmac "\$KEY" 2>/dev/null | awk '{print \$2}')"
   if [[ "\$CALC_HMAC" == "\$STORED_HMAC" ]]; then
     echo -e "  \${GREEN}[✓]\${RESET} \$ENTRY"
-    (( PASS++ ))
+    PASS=$((PASS + 1))
   else
     echo -e "  \${RED}[✗] TAMPERED: \$ENTRY\${RESET}"
-    (( FAIL++ ))
+    FAIL=$((FAIL + 1))
   fi
 done < "\$AUDIT_LOG"
 
