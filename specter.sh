@@ -216,7 +216,7 @@ fail()    { _log "${RED}  ✗${RESET}  $*"; }
 timeline() {
   local MSG="$1"
   local TS; TS=$(date '+%Y-%m-%d %H:%M:%S')
-  echo "[$TS] $MSG" >> "${TIMELINE_FILE:-/dev/null}" 2>/dev/null
+  [[ -d "${RAMDISK_MOUNT}" ]] && echo "[$TS] $MSG" >> "${TIMELINE_FILE}" 2>/dev/null || true
   step "Timeline: $MSG"
 }
 
