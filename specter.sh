@@ -420,11 +420,13 @@ install_dependencies() {
 
   case "$PM" in
     apt)
+      export DEBIAN_FRONTEND=noninteractive
       apt-get update -qq 2>/dev/null | tail -1
       local FAILED=()
       for pkg in "${DEPS_CORE[@]}"; do
         if ! dpkg -l "$pkg" &>/dev/null; then
-          if apt-get install -y -qq "$pkg" &>/dev/null; then
+          if DEBIAN_FRONTEND=noninteractive apt-get install -y -qq \
+               -o Dpkg::Options::="--force-confold" "$pkg" &>/dev/null; then
             ok "Installed: $pkg"
           else
             FAILED+=("$pkg")
@@ -435,7 +437,8 @@ install_dependencies() {
       done
       # Optional — don't fail on these
       for pkg in "${DEPS_OPTIONAL[@]}"; do
-        apt-get install -y -qq "$pkg" &>/dev/null && ok "Optional: $pkg" || true
+        DEBIAN_FRONTEND=noninteractive apt-get install -y -qq \
+          -o Dpkg::Options::="--force-confold" "$pkg" &>/dev/null && ok "Optional: $pkg" || true
       done
       (( ${#FAILED[@]} > 0 )) && warn "Could not install: ${FAILED[*]}"
       ;;
