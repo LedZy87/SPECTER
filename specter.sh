@@ -304,7 +304,7 @@ detect_os() {
 
 detect_virt() {
   if command -v systemd-detect-virt &>/dev/null; then
-    VIRT=$(systemd-detect-virt 2>/dev/null || echo "none")
+    VIRT=$(systemd-detect-virt 2>/dev/null) || VIRT="none"
   elif grep -qi "hypervisor" /proc/cpuinfo 2>/dev/null; then
     VIRT="vm"
   else
@@ -554,6 +554,7 @@ _progress_bar() {
   local total="$2"
   local label="${3:-}"
   local width=36
+  [[ $current -gt $total ]] && current=$total
   local filled=$(( current * width / total ))
   local pct=$(( current * 100 / total ))
   local bar="" i
@@ -1483,6 +1484,9 @@ mitigate_covert_channels() {
 # ── DNS leak prevention ─────────────────────────────────────────
 prevent_dns_leak() {
   header "DNS LEAK PREVENTION"
+
+  # Remove immutable bit if set from a previous run
+  chattr -i /etc/resolv.conf 2>/dev/null || true
 
   # Backup original resolv.conf
   cp /etc/resolv.conf "${BACKUP_DIR}/resolv.conf.bak" 2>/dev/null || true
