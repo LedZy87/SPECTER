@@ -384,7 +384,7 @@ DEPS_CORE=(
   tor torsocks proxychains4 curl wget
   iptables ip6tables ufw netfilter-persistent
   macchanger net-tools iproute2 arp-scan
-  gnupg2 gpg-agent
+  gnupg2
   rkhunter chkrootkit aide
   apparmor apparmor-utils
   usbguard firejail
