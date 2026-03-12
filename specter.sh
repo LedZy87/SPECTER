@@ -1,11 +1,49 @@
 #!/bin/bash
 # ================================================================
-#  SPECTER v10.10.0 — ABSOLUTE ZERO
-#  The ultimate privacy and anonymity system
+#  SPECTER v10.11.0 — IRON SHIELD
+#  The ultimate privacy and anonymity system for Linux
 #  Software-maximum protection — government-level defense
 #
-# © LedZy — SPECTER 2025 — All rights reserved
-# Proof of authorship: echo 'TGVkWnk6U1BFQ1RFUjoyMDI1' | base64 -d
+#  © LedZy — SPECTER 2025 — All rights reserved
+#  Proof of authorship: echo 'TGVkWnk6U1BFQ1RFUjoyMDI1' | base64 -d
+#
+#  Single-file. No dependencies beyond standard Linux + apt.
+#  Designed for Tails OS, Whonix, Debian, Ubuntu.
+#  Run as root. Read the docs before running --full.
+#
+# ================================================================
+#  COMMAND REFERENCE
+# ================================================================
+#
+#  ── v10.11 IRON SHIELD (active defense) ──────────────────────
+#  fortress-mode     Whitelist-only firewall — zero inbound, Tor-only out
+#  ssh-lockdown      Disable SSH + fail2ban ultra-aggressive mode
+#  auto-defend       Real-time attack detection + automatic block/response
+#  exfil-detect      Outbound data exfiltration detection daemon
+#  port-knock        Port knocking for authorized remote access
+#  canary-deploy     Honeypot files that alert on any access
+#  ioc-scan          Indicators-of-compromise full system scanner
+#  proc-harden       Seccomp + ASLR + exploit mitigations
+#  sysctl-max        Maximum kernel hardening sysctl profile
+#  log-fortify       Tamper-proof encrypted system logs
+#  v10-11-status     Iron Shield feature status dashboard
+#
+#  ── v10.10 ABSOLUTE ZERO (hardware-level) ────────────────────
+#  build-specter-usb Debian Live amnesic USB (live-build)
+#  pq-keygen         Generate Kyber-1024 + AES-256-GCM key pair
+#  pq-encrypt        Post-quantum encrypt a file
+#  pq-decrypt        Post-quantum decrypt a file
+#  dualhop-start     I2P → Tor dual-chain proxy (proxychains4)
+#  dualhop-exec      Run command through I2P → Tor chain
+#  dualhop-status    Show dual-hop proxy status
+#  dualhop-stop      Stop dual-hop proxy
+#  tpm-check         TPM 2.0 chip detection and PCR status
+#  tpm-seal          Seal a secret to TPM PCR values
+#  tpm-unseal        Unseal TPM-protected secret
+#  yubikey-setup     Hardware 2FA for LUKS + sudo (YubiKey)
+#  yubikey-status    YubiKey hardware token status
+#  hardware-checklist Recommended hardware buy list + 9-step setup
+#  v10-10-status     Absolute Zero feature status dashboard
 #
 #  ── v10.9 ZERO TRACE PROTOCOL ────────────────────────────────
 #  vanguards-install Guard rotation defense (Tor HS deanon protection)
@@ -17,7 +55,7 @@
 #  mem-forensics-def Kernel memory anti-forensics hardening
 #  noise-upgrade     Human-pattern cover traffic (burst+quiet)
 #  tscm-full         NFC + BLE + SDR wideband sweep
-#  guardian-mode     Single command: ALL protection layers active
+#  guardian-mode     Single command — ALL protection layers active
 #
 #  ── v10.8 MAXIMUM HARDENING ──────────────────────────────────
 #  stream-isolation  Per-destination Tor circuits + padding
@@ -37,7 +75,7 @@
 #  honeypot-check    DNS hijack + ARP spoof + MITM detection
 #  steg-hide/reveal  Steganographic comms via innocent images
 #  counter-recon     Live scan/probe detection daemon
-#  decoy-traffic     Cover traffic via Tor (defeats analysis)
+#  decoy-traffic     Cover traffic via Tor (defeats traffic analysis)
 #  physical-panic    Webcam photo + alarm + screen lock
 #  browser-jail      Firejail + RAM profile per session
 #  os-spoof          TCP/IP fingerprint → Windows/macOS
@@ -46,14 +84,14 @@
 #  voice-start       Encrypted voice (Mumble over Tor)
 #
 #  ── v10.6 USB & COMMS ────────────────────────────────────────
-#  usb-key-setup     Format USB as Dead Man's Key (plug=on/pull=nuke)
-#  airgap-send       Encrypt file → QR codes (zero network)
+#  usb-key-setup     Format USB as Dead Man's Switch (plug=on/pull=nuke)
+#  airgap-send       Encrypt file → QR codes (zero network transfer)
 #  airgap-receive    Reassemble file from QR codes
 #  dots-check        Printer tracking dot detection (deda)
 #  kloak-start       Keystroke timing anonymization
 #  verify-tools      SHA256 tamper-check on critical binaries
 #  ntp-sync          Time sync via Tor only
-#  screen-guard      Block screenshot tools + framebuffer
+#  screen-guard      Block screenshot tools + framebuffer access
 #  exit-autoupdate   Auto-refresh bad Tor exit list (cron 6h)
 #  usb-safe          Mount USB isolated, scan, copy to RAM disk
 #
@@ -66,32 +104,40 @@
 #  opsec-status      12-point instant health check
 #  tcp-harden        TCP/IP stack fingerprint hardening
 #
-#  USAGE:
-#    sudo ./specter.sh --full      # complete setup
-#    sudo ./specter.sh --wizard    # guided setup
-#    sudo ./specter.sh --quick     # essential only
-#    sudo ./specter.sh --panic     # emergency wipe
-#    sudo ./specter.sh --score     # OPSEC score
-#    sudo ./specter.sh --dashboard # live status
+# ================================================================
+#  USAGE
+# ================================================================
+#
+#    sudo ./specter.sh --full        # complete setup (all modules)
+#    sudo ./specter.sh --wizard      # guided interactive setup
+#    sudo ./specter.sh --quick       # essential privacy only
+#    sudo ./specter.sh --panic       # emergency secure wipe
+#    sudo ./specter.sh --score       # OPSEC score report
+#    sudo ./specter.sh --dashboard   # live system status
+#    sudo ./specter.sh --guardian    # activate all layers now
+#    sudo ./specter.sh --v10-9       # install Zero Trace Protocol
+#    sudo ./specter.sh --v10-10      # install Absolute Zero
+#    sudo ./specter.sh --v10-11      # install Iron Shield
 #
 #  DISABLE ANIMATIONS:
 #    ANIM_ENABLED=0 sudo ./specter.sh --full
+#
 # ================================================================
 
-set -o pipefail
+set -euo pipefail
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_core.sh
+# CORE — Globals · Colors · Logging · Config · Preflight
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.0.0 — MODULE: CORE
+#  SPECTER v10.11.0 — MODULE: CORE
 #  Globals · Color helpers · Logging · Config · Preflight · Deps
 # ================================================================
 
 # ── Version ────────────────────────────────────────────────────
-readonly VERSION="10.0.0"
-readonly CODENAME="MAXIMUM HARDENING"
+readonly VERSION="10.11.0"
+readonly CODENAME="IRON SHIELD"
 readonly BUILD_DATE="$(date +%Y-%m-%d 2>/dev/null || echo 'unknown')"
 
 # ── Runtime paths ───────────────────────────────────────────────
@@ -227,8 +273,8 @@ print_banner() {
   echo "  ║    ██║     ██║  ██║███████╗███████║███████║╚██████╗         ║"
   echo "  ║    ╚═╝     ╚═╝  ╚═╝╚══════╝╚══════╝╚══════╝ ╚═════╝         ║"
   echo "  ║                                                              ║"
-  echo "  ║        SPECTER  ·  v10.0.0  ·  MAXIMUM HARDENING         ║"
-  echo "  ║        Defense-grade privacy for investigative work          ║"
+  echo "  ║          SPECTER  ·  v10.11.0  ·  IRON SHIELD              ║"
+  echo "  ║          The ultimate privacy and anonymity system           ║"
   echo "  ║                                                              ║"
   echo "  ╚══════════════════════════════════════════════════════════════╝"
   echo -e "${RESET}"
@@ -409,11 +455,11 @@ install_dependencies() {
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_7_anim.sh
+# ANIMATION SYSTEM
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.8.0 — MODULE: ANIMATION SYSTEM
+#  SPECTER v10.11.0 — MODULE: ANIMATION SYSTEM
 #  Overrides display functions with animated versions
 #  Matrix rain · Typewriter · Spinners · Progress bars
 #  Glitch effects · Pulse alerts · Boot sequence · ASCII art
@@ -428,7 +474,7 @@ install_dependencies() {
 # Zero-day protection embedded throughout
 # Years of security research: 2025
 _DW_AUTHOR_TOKEN="TGVkWnk6U1BFQ1RFUjoyMDI1"
-_DW_BUILD_STAMP="SPECTER:LedZy:v10.8.0:2025"
+_DW_BUILD_STAMP="SPECTER:LedZy:v10.11.0:2025"
 
 # ── Core animation config ─────────────────────────────────────
 ANIM_ENABLED="${ANIM_ENABLED:-1}"
@@ -598,7 +644,7 @@ _boot_sequence() {
 
 print_banner() {
   [[ "$ANIM_ENABLED" -eq 0 ]] && {
-    echo -e "\033[1;36m  SPECTER v10.8.0 — MAXIMUM HARDENING — Made by LedZy\033[0m"
+    echo -e "\033[1;36m  SPECTER v10.11.0 — IRON SHIELD — Made by LedZy\033[0m"
     return
   }
 
@@ -641,7 +687,7 @@ print_banner() {
   sleep 0.25
 
   # Version + authorship line
-  printf "  ${D}v10.8.0${X}  ·  ${D}Maximum Hardening${X}  ·  ${W}Made by LedZy${X}\n"
+  printf "  ${D}v10.11.0${X}  ·  ${D}Iron Shield${X}  ·  ${W}Made by LedZy${X}\n"
   echo ""
   sleep 0.3
 
@@ -722,7 +768,7 @@ anim_setup_complete() {
   local BOX=(
     "  ╔══════════════════════════════════════════════════════════════╗"
     "  ║                                                              ║"
-    "  ║   SPECTER v10.8.0 — MAXIMUM HARDENING — FULLY OPERATIONAL   ║"
+    "  ║      SPECTER v10.11.0 — IRON SHIELD — FULLY OPERATIONAL     ║"
     "  ║                      Made by LedZy                          ║"
     "  ║                                                              ║"
     "  ╚══════════════════════════════════════════════════════════════╝"
@@ -885,11 +931,11 @@ anim_reset_phases() {
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_harden.sh
+# SYSTEM HARDENING
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.0.0 — MODULE: SYSTEM HARDENING
+#  SPECTER v10.11.0 — MODULE: SYSTEM HARDENING
 #  15-layer hardening: RAM disk · swap · hostname · MAC · hardware
 #  kernel · AppArmor · USBGuard · anti-forensics · cold-boot
 #  environment · camera/mic · Firejail · boot integrity · covert
@@ -1120,7 +1166,7 @@ kernel_hardening() {
   header "LAYER 9 — KERNEL HARDENING (25 parameters)"
   local SYSCTL_FILE="/etc/sysctl.d/99-specter-v10.conf"
   cat > "$SYSCTL_FILE" << 'EOF'
-# SPECTER v10.0.0 — Kernel Hardening
+# SPECTER v10.11.0 — Kernel Hardening
 
 # Memory protection
 kernel.dmesg_restrict = 1
@@ -1417,11 +1463,11 @@ mitigate_covert_channels() {
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_network.sh
+# NETWORK
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.0.0 — MODULE: NETWORK
+#  SPECTER v10.11.0 — MODULE: NETWORK
 #  DNS leak prevention · DNSCrypt · Tor (bridges/obfs4/Snowflake)
 #  Multi-hop VPN→Tor · kill switch · UFW · WireGuard · I2P
 #  Traffic shaping · Guard reputation · proxychains · verify
@@ -1543,7 +1589,7 @@ EOF
   # Write torrc
   cp /etc/tor/torrc "${BACKUP_DIR}/torrc.bak" 2>/dev/null || true
   cat > /etc/tor/torrc << EOF
-# SPECTER v10.0.0 — Tor Configuration
+# SPECTER v10.11.0 — Tor Configuration
 
 # SOCKS proxy
 SocksPort 127.0.0.1:9050 IsolateDestAddr IsolateDestPort
@@ -1953,11 +1999,11 @@ verify_tor() {
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_anonymity.sh
+# ANONYMITY
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.0.0 — MODULE: ANONYMITY
+#  SPECTER v10.11.0 — MODULE: ANONYMITY
 #  Identity management · PGP · TOTP · Browser hardening
 #  OnionShare · Hidden service · Noise generator · Circuit rotation
 #  Secure clipboard · Auto-nuke · Signal CLI · Contact book
@@ -2698,11 +2744,11 @@ SCRIPT
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_crypto.sh
+# CRYPTOGRAPHY
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.0.0 — MODULE: CRYPTOGRAPHY
+#  SPECTER v10.11.0 — MODULE: CRYPTOGRAPHY
 #  Age encryption · VeraCrypt · LUKS (standard + hidden volume)
 #  Password manager · Secure delete · Key ceremony · Secure notes
 # ================================================================
@@ -3078,11 +3124,11 @@ SCRIPT
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_documents.sh
+# DOCUMENT SECURITY
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.0.0 — MODULE: DOCUMENT SECURITY
+#  SPECTER v10.11.0 — MODULE: DOCUMENT SECURITY
 #  PDF sanitization · Office doc cleaning · Metadata stripping
 #  Safe viewer · Bulk processor · Beacon scanner · File quarantine
 #  Steganography detection
@@ -3607,11 +3653,11 @@ SCRIPT
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_sources.sh
+# SOURCE PROTECTION
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.0.0 — MODULE: SOURCE PROTECTION
+#  SPECTER v10.11.0 — MODULE: SOURCE PROTECTION
 #  SecureDrop client · Anonymous dropbox · Dead drop system
 #  Source authentication · Communication channels · Session journal
 # ================================================================
@@ -3966,11 +4012,11 @@ SCRIPT
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_emergency.sh
+# EMERGENCY SYSTEMS
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.0.0 — MODULE: EMERGENCY SYSTEMS
+#  SPECTER v10.11.0 — MODULE: EMERGENCY SYSTEMS
 #  Panic button · Dead man's switch · Duress system
 #  Quick-nuke · Session nuke · Decoy setup · Emergency contacts
 # ================================================================
@@ -4263,14 +4309,14 @@ install_nuke_script() {
   cat > /usr/local/bin/session-nuke << 'SCRIPT'
 #!/bin/bash
 # ================================================================
-#  SESSION NUKE v10.0.0 — Complete session wipe and system restore
+#  SESSION NUKE v10.11.0 — Complete session wipe and system restore
 # ================================================================
 RAMDISK_MOUNT="/mnt/secure_workspace"
 BACKUP_DIR="${RAMDISK_MOUNT}/.backups"
 
 echo ""
 echo -e "\033[1;31m  ╔══════════════════════════════════════════╗"
-echo   "  ║   SESSION NUKE v10.0.0 — ACTIVE         ║"
+echo   "  ║   SESSION NUKE v10.11.0 — ACTIVE        ║"
 echo -e "  ╚══════════════════════════════════════════╝\033[0m"
 echo ""
 
@@ -4510,11 +4556,11 @@ physical_opsec_checklist() {
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_monitor.sh
+# MONITORING
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.0.0 — MODULE: MONITORING
+#  SPECTER v10.11.0 — MODULE: MONITORING
 #  Leak monitor · LAN monitor · Anomaly detector
 #  Correlation attack detector · Beacon scanner · Integrity check
 #  Hardware tamper detection · System integrity
@@ -5043,11 +5089,11 @@ SCRIPT
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_tools.sh
+# TOOLS
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.0.0 — MODULE: TOOLS
+#  SPECTER v10.11.0 — MODULE: TOOLS
 #  OPSEC score (25 checks) · Dashboard · Route visualizer
 #  Profile manager · HTML + text report · Risk assessment
 #  OPSEC checklist · Metadata tools
@@ -5428,7 +5474,7 @@ echo "[*] Generating OPSEC report..."
 # Text report
 {
 echo "════════════════════════════════════════════════════════"
-echo " SPECTER v10.0.0 — SESSION REPORT"
+echo " SPECTER v10.11.0 — SESSION REPORT"
 echo " Generated: \$(date '+%Y-%m-%d %H:%M:%S UTC')"
 echo "════════════════════════════════════════════════════════"
 echo ""
@@ -5503,7 +5549,7 @@ pre{background:#111;padding:15px;border:1px solid #333;overflow:auto}
 </style>
 </head>
 <body>
-<h1>SPECTER v10.0.0 — Session Report</h1>
+<h1>SPECTER v10.11.0 — Session Report</h1>
 HTML
 echo "<p>Generated: \$(date '+%Y-%m-%d %H:%M:%S UTC')</p>" >> "\$HTML_REPORT"
 echo "<h2>OPSEC Score</h2><pre>" >> "\$HTML_REPORT"
@@ -5659,11 +5705,11 @@ print_opsec_checklist() {
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_5_extras.sh
+# v10.5 — EXIT WATCH · MAC ROTATE · LEAK TEST · RAM SHRED
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.5.0 — MODULE: POWER EXTRAS
+#  SPECTER v10.11.0 — MODULE: POWER EXTRAS
 #  10 small but critical additions:
 #
 #  exit-watch        — real-time Tor exit IP change detector
@@ -6464,11 +6510,11 @@ setup_v10_5_extras() {
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_6_extras.sh
+# v10.6 — USB KEY · AIRGAP · SCREEN GUARD · KLOAK
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.6.0 — MODULE: ADVANCED EXTRAS
+#  SPECTER v10.11.0 — MODULE: ADVANCED EXTRAS
 #  1.  USB Dead Man's Key       6.  Secure NTP (Tor)
 #  2.  Secure Comms (Matrix)    7.  Screen Guard
 #  3.  Air-Gap QR Transfer      8.  Exit Feed Auto-Update
@@ -7523,11 +7569,11 @@ setup_v10_6_extras() {
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_7_extras.sh
+# v10.7 — HONEYPOT · STEGANOGRAPHY · COUNTER-RECON · DECOY
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.7.0 — MODULE: ADVANCED DEFENSE
+#  SPECTER v10.11.0 — MODULE: ADVANCED DEFENSE
 #  1.  Honeypot / MITM Detection     6.  Browser Jail (Firejail)
 #  2.  Steganographic Comms          7.  OS Fingerprint Spoof
 #  3.  Counter-Recon (scan detect)   8.  Net Wipe (trace clear)
@@ -8423,11 +8469,11 @@ setup_v10_7_extras() {
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_8_extras.sh
+# v10.8 — STREAM ISOLATION · TOR BROWSER · TRAFFIC PAD · RF SCAN
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.8.0 — MODULE: MAXIMUM HARDENING
+#  SPECTER v10.11.0 — MODULE: MAXIMUM HARDENING
 #  Everything software can do against government-level surveillance
 #
 #  1.  Stream Isolation       — per-destination Tor circuits
@@ -9556,11 +9602,11 @@ setup_v10_8_extras() {
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_9_extras.sh
+# v10.9 — ZERO TRACE PROTOCOL
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.9.0 — MODULE: ZERO TRACE PROTOCOL
+#  SPECTER v10.11.0 — MODULE: ZERO TRACE PROTOCOL
 #  Maximum detection resistance — software ceiling
 #
 #  1.  Vanguards          — guard rotation defense (Tor HS deanon)
@@ -10360,11 +10406,11 @@ setup_v10_9_extras() {
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_10_extras.sh
+# v10.10 — ABSOLUTE ZERO
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.10.0 — MODULE: ABSOLUTE ZERO
+#  SPECTER v10.11.0 — MODULE: ABSOLUTE ZERO
 #  Closest software can get to physical-layer security
 #
 #  1.  build-specter-usb — Bootable amnesic USB (Debian Live + SPECTER)
@@ -11002,7 +11048,7 @@ setup_v10_10_extras() {
 }
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_11_extras.sh
+# v10.11 — IRON SHIELD
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
@@ -12320,11 +12366,11 @@ setup_v10_11_extras() {
 
 
 # ════════════════════════════════════════════════════════════════
-# MODULE: v10_menus.sh
+# MENUS & CLI ENTRYPOINT
 # ════════════════════════════════════════════════════════════════
 
 # ================================================================
-#  SPECTER v10.8.0 — MODULE: MENUS & ENTRYPOINT
+#  SPECTER v10.11.0 — MODULE: MENUS & ENTRYPOINT
 #  Setup wizard · Full/Quick/Stealth setup · Main menu
 #  Tools menu · Crypto menu · Docs menu · Sources menu
 #  Emergency menu · Monitor menu · CLI flags
@@ -12335,14 +12381,14 @@ setup_v10_11_extras() {
 # ================================================================
 
 full_setup() {
-  header "FULL SETUP v10.5.0 — MAXIMUM HARDENING"
+  header "FULL SETUP v10.11.0 — IRON SHIELD"
   timeline "Full setup started"
 
   preflight_checks
   install_dependencies
 
   # ── LAYER: System Hardening ───────────────────────────────
-  header "PHASE 1/6 — SYSTEM HARDENING"
+  header "PHASE 1/15 — SYSTEM HARDENING"
   setup_ramdisk
   secure_swap
   randomize_hostname
@@ -12360,7 +12406,7 @@ full_setup() {
   mitigate_covert_channels
 
   # ── LAYER: Network ────────────────────────────────────────
-  header "PHASE 2/6 — NETWORK"
+  header "PHASE 2/15 — NETWORK"
   prevent_dns_leak
   setup_dnscrypt
   setup_tor
@@ -12375,7 +12421,7 @@ full_setup() {
   verify_tor
 
   # ── LAYER: Anonymity ──────────────────────────────────────
-  header "PHASE 3/6 — ANONYMITY"
+  header "PHASE 3/15 — ANONYMITY"
   setup_identity_manager
   setup_pgp_identity
   setup_contact_book
@@ -12390,7 +12436,7 @@ full_setup() {
   setup_totp
 
   # ── LAYER: Cryptography ───────────────────────────────────
-  header "PHASE 4/6 — CRYPTOGRAPHY"
+  header "PHASE 4/15 — CRYPTOGRAPHY"
   setup_age_encryption
   setup_veracrypt
   setup_luks_vault
@@ -12400,7 +12446,7 @@ full_setup() {
   setup_secure_notes
 
   # ── LAYER: Document Security ──────────────────────────────
-  header "PHASE 5/6 — DOCUMENT SECURITY"
+  header "PHASE 5/15 — DOCUMENT SECURITY"
   install_metadata_tools
   setup_pdf_sanitizer
   setup_doc_cleaner
@@ -12410,7 +12456,7 @@ full_setup() {
   setup_file_quarantine
 
   # ── LAYER: Sources & Emergency ────────────────────────────
-  header "PHASE 5.5/6 — SOURCES"
+  header "PHASE 6/15 — SOURCES"
   setup_securedrop
   setup_anonymous_dropbox
   setup_dead_drop
@@ -12418,7 +12464,7 @@ full_setup() {
   setup_session_journal
 
   # ── LAYER: Emergency ──────────────────────────────────────
-  header "PHASE 5.8/6 — EMERGENCY SYSTEMS"
+  header "PHASE 7/15 — EMERGENCY SYSTEMS"
   setup_panic_button
   setup_deadmans_switch
   setup_duress_system
@@ -12427,7 +12473,7 @@ full_setup() {
   setup_decoy_system
 
   # ── LAYER: Monitoring ─────────────────────────────────────
-  header "PHASE 6/6 — MONITORING"
+  header "PHASE 8/15 — MONITORING & TOOLS"
   setup_leak_monitor
   setup_lan_monitor
   setup_anomaly_detector
@@ -12443,32 +12489,32 @@ full_setup() {
   setup_risk_assessment
 
   # ── LAYER: v10.5 Power Extras ─────────────────────────────
-  header "PHASE 6.5/6 — v10.5 POWER EXTRAS"
+  header "PHASE 9/15 — v10.5 POWER EXTRAS"
   setup_v10_5_extras
 
   # ── LAYER: v10.6 Advanced Extras ──────────────────────────
-  header "PHASE 6.8/6 — v10.6 ADVANCED EXTRAS"
+  header "PHASE 10/15 — v10.6 USB & COMMS"
   setup_v10_6_extras
 
   # ── LAYER: v10.7 Defense + Animations ─────────────────────
-  header "PHASE 7/8 — v10.7 ADVANCED DEFENSE"
+  header "PHASE 11/15 — v10.7 ADVANCED DEFENSE"
   anim_reset_phases 16
   setup_v10_7_extras
 
   # ── LAYER: v10.8 Maximum Hardening ────────────────────────
-  header "PHASE 8/9 — v10.8 MAXIMUM HARDENING"
+  header "PHASE 12/15 — v10.8 MAXIMUM HARDENING"
   setup_v10_8_extras
 
   # ── LAYER: v10.9 Zero Trace Protocol ──────────────────────
-  header "PHASE 9/9 — v10.9 ZERO TRACE PROTOCOL"
+  header "PHASE 13/15 — v10.9 ZERO TRACE PROTOCOL"
   setup_v10_9_extras
 
   # ── LAYER: v10.10 Absolute Zero ────────────────────────────
-  header "PHASE 10/10 — v10.10 ABSOLUTE ZERO"
+  header "PHASE 14/15 — v10.10 ABSOLUTE ZERO"
   setup_v10_10_extras
 
   # ── LAYER: v10.11 Iron Shield ──────────────────────────────
-  header "PHASE 11/11 — v10.11 IRON SHIELD"
+  header "PHASE 15/15 — v10.11 IRON SHIELD"
   setup_v10_11_extras
 
   # ── Start critical monitors ────────────────────────────────
@@ -12502,7 +12548,7 @@ full_setup() {
 }
 
 quick_setup() {
-  header "QUICK SETUP v10.0.0"
+  header "QUICK SETUP v10.11.0"
   timeline "Quick setup started"
   preflight_checks
   setup_ramdisk
@@ -12524,7 +12570,7 @@ quick_setup() {
 }
 
 stealth_setup() {
-  header "STEALTH SETUP v10.0.0 (MINIMAL FOOTPRINT)"
+  header "STEALTH SETUP v10.11.0 (MINIMAL FOOTPRINT)"
   timeline "Stealth setup started"
   # Only essential — leaves minimal traces
   preflight_checks
@@ -12592,7 +12638,7 @@ run_setup_wizard() {
 show_main_menu() {
   while true; do
     clear; print_banner
-    echo -e "  ${BOLD}MAIN MENU — v10.0.0${RESET}"
+    echo -e "  ${BOLD}MAIN MENU — v10.11.0 — IRON SHIELD${RESET}"
     echo "  ════════════════════════════════════════════════"
     echo "  ── Setup ────────────────────────────────────────"
     echo "  1)  Full setup        (all protections)"
