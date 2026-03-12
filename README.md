@@ -1,408 +1,317 @@
-# SPECTER v10.11.0 — Iron Shield
+<div align="center">
 
-**The ultimate privacy and anonymity system — maximum hardening, zero trace, active defense.**
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:0d0d0d,30:1a0000,60:330000,100:ff0000&height=280&section=header&text=S%20P%20E%20C%20T%20E%20R&fontSize=100&fontColor=ff0000&animation=fadeIn&fontAlignY=45&desc=%E2%96%88%E2%96%88%E2%96%88%E2%96%88%E2%96%88%E2%96%88%E2%96%88%E2%96%88%E2%96%88%E2%96%88%20%20v10.11.0%20%E2%80%94%20IRON%20SHIELD%20%20%E2%96%88%E2%96%88%E2%96%88%E2%96%88%E2%96%88%E2%96%88%E2%96%88%E2%96%88%E2%96%88%E2%96%88&descSize=14&descAlignY=65&descColor=cc0000&stroke=ff0000&strokeWidth=2"/>
 
-> Made by **LedZy**
+</div>
 
-A comprehensive, modular bash toolkit that sets up maximum operational security on Linux — covering network anonymity, identity protection, document security, encrypted communications, physical security, and government-level traffic analysis resistance.
+<div align="center">
 
----
+[![Typing SVG](https://readme-typing-svg.demolab.com?font=Share+Tech+Mono&weight=900&size=26&duration=1800&pause=400&color=FF0000&background=00000000&center=true&vCenter=true&width=800&lines=%5B+INITIALIZING+SPECTER+%5D...;160%2B+commands.+11+layers.+0+traces.;Your+ISP+is+blind.+Your+government+is+blind.;Nobody+knows+you're+here.;Maximum+hardening.+Active+defense.;The+ghost+protocol+is+now+active.)](https://git.io/typing-svg)
 
-## What it does
+<br/>
 
-When you run `--full`, the script installs and configures over 160 commands covering every layer of privacy and security:
+![Version](https://img.shields.io/badge/▓▓▓_VERSION-v10.11.0_IRON_SHIELD-ff0000?style=for-the-badge&logoColor=white)
+![Lines](https://img.shields.io/badge/▓▓▓_CODEBASE-14%2C500%2B_LINES-cc0000?style=for-the-badge)
+![Commands](https://img.shields.io/badge/▓▓▓_COMMANDS-160%2B-990000?style=for-the-badge)
+![Layers](https://img.shields.io/badge/▓▓▓_LAYERS-11-660000?style=for-the-badge)
 
-```
-Network      →  Tor + kill switch + DNS lock + stream isolation + bridge obfuscation
-Identity     →  MAC randomization + hostname randomization + hardware ID scrubbing
-Documents    →  Metadata stripping + beacon scanning + printer dot detection
-Encryption   →  Age + LUKS + VeraCrypt + GPG + steganographic comms
-Emergency    →  USB dead man's key + panic button + dead man's switch + session nuke
-Monitoring   →  Leak detection + anomaly detection + counter-recon + tripwire
-Comms        →  Matrix over Tor + encrypted voice + air-gap QR transfer
-Physical     →  RF scan + NFC + BLE + intruder camera + screen guard + USB isolation
-Kernel       →  Lockdown mode + 50+ modules disabled + ptrace/kexec/BPF locked
-Supply chain →  GPG verify + debsums + rootkit scan + HMAC audit logs
-Zero Trace   →  Vanguards + transport rotation + net namespaces + compartments
-Absolute Zero→  Post-quantum crypto + I2P+Tor dual-hop + TPM attestation + bootable USB
-Iron Shield  →  Whitelist firewall + auto-defend + exfil-detect + canary + IOC scan
-```
+<br/>
+
+![Platform](https://img.shields.io/badge/Linux-Only-ff0000?style=flat-square&logo=linux&logoColor=white)
+![Shell](https://img.shields.io/badge/Bash-5.0%2B-ff0000?style=flat-square&logo=gnu-bash&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-ff0000?style=flat-square)
+![Status](https://img.shields.io/badge/Status-ARMED_%F0%9F%94%B4-ff0000?style=flat-square)
+![Author](https://img.shields.io/badge/Author-LedZy-ff0000?style=flat-square&logo=github&logoColor=white)
+
+</div>
 
 ---
 
-## Requirements
+<div align="center">
 
-### Operating System
-| OS | Support | Notes |
-|---|---|---|
-| **Tails OS** | ✅ Recommended | Amnesic, built for this purpose |
-| **Whonix** | ✅ Recommended | Tor-routed by design |
-| **Debian 11/12** | ✅ Full | All features available |
-| **Ubuntu 22.04+** | ✅ Full | All features available |
-| **Kali Linux** | ✅ Full | Most tools pre-installed |
-| **Other Debian-based** | ⚠️ Partial | Some features may vary |
-| **Fedora / Arch** | ⚠️ Partial | apt-based installs will fail |
-| **macOS / Windows** | ❌ Not supported | Linux-only |
-
-### Hardware
 ```
-Minimum:    2GB RAM, 4GB storage, x86_64 CPU
-Recommended: 4GB+ RAM, 8GB+ storage, modern multi-core CPU
-Optional:    RTL-SDR USB dongle (for RF surveillance detection ~$20)
-             USB drive (for Dead Man's Key feature)
+█████████████████████████████████████████████████████████████████████
+█                                                                   █
+█   Right now, your internet provider is logging every site         █
+█   you visit. Data brokers are selling your behavior.              █
+█   Advertisers know your location, your habits, your secrets.      █
+█   Surveillance infrastructure was built around you —              █
+█   without your consent, without your knowledge.                   █
+█                                                                   █
+█   SPECTER was built for one reason:                               █
+█                                                                   █
+█              TO MAKE YOU DISAPPEAR.                               █
+█                                                                   █
+█████████████████████████████████████████████████████████████████████
 ```
 
-### Kernel
-```
-Minimum:  Linux 4.19+
-Recommended: Linux 5.4+ (for kernel lockdown mode)
-Best:     Linux 5.15+ (full feature support)
-```
+</div>
 
 ---
 
-## Installation
+## ░▒▓█ `WHAT IS SPECTER?` █▓▒░
 
-### Quick start (one command)
+SPECTER is not a VPN. Not a browser extension. Not a "privacy mode."
+
+It's a **14,500+ line modular bash system** that transforms any Linux machine into a hardened, anonymous, surveillance-resistant fortress — in a single command.
+
+When you run `--full`, SPECTER deploys **11 simultaneous layers of protection** covering every attack surface: your network, your identity, your files, your hardware, your kernel, your communications, and your physical environment.
+
+It was built for people who understand that **privacy isn't paranoia — it's a right.**
+
 ```bash
-git clone https://github.com/YOUR_USERNAME/specter.git
-cd specter
+# One command. Full transformation.
 sudo bash specter.sh --full
 ```
 
-### Step-by-step
-```bash
-# 1. Clone the repository
-git clone https://github.com/YOUR_USERNAME/specter.git
-cd specter
+---
 
-# 2. Review the script (always audit before running as root)
+## ░▒▓█ `THE 11 LAYERS` █▓▒░
+
+<div align="center">
+
+```
+╔══════════════════════════════════════════════════════════════════════════╗
+║                                                                          ║
+║  ░ LAYER 01 — NETWORK       Tor + kill switch + DNS lock                 ║
+║               ──────        stream isolation + bridge obfuscation        ║
+║                                                                          ║
+║  ░ LAYER 02 — IDENTITY      MAC randomization + hostname scrubbing       ║
+║               ────────      hardware ID wipe + OS fingerprint spoof      ║
+║                                                                          ║
+║  ░ LAYER 03 — DOCUMENTS     Metadata strip + beacon scan                 ║
+║               ─────────     printer dot detection + PDF sanitization     ║
+║                                                                          ║
+║  ░ LAYER 04 — ENCRYPTION    Age + LUKS2 + VeraCrypt + GPG                ║
+║               ──────────    steganographic comms + post-quantum KEM      ║
+║                                                                          ║
+║  ░ LAYER 05 — EMERGENCY     USB dead man's key + panic button            ║
+║               ─────────     14-step session nuke + duress protocol       ║
+║                                                                          ║
+║  ░ LAYER 06 — MONITORING    Leak detection + anomaly engine              ║
+║               ──────────    counter-recon + tripwire + HMAC audit        ║
+║                                                                          ║
+║  ░ LAYER 07 — COMMS         Matrix over Tor + encrypted voice            ║
+║               ─────         air-gap QR transfer + steganography          ║
+║                                                                          ║
+║  ░ LAYER 08 — PHYSICAL      RF surveillance scan + NFC + BLE             ║
+║               ────────      intruder camera + screen guard + USB iso     ║
+║                                                                          ║
+║  ░ LAYER 09 — KERNEL        Lockdown mode + 50+ modules disabled         ║
+║               ──────        ptrace/kexec/BPF locked + mem forensics      ║
+║                                                                          ║
+║  ░ LAYER 10 — ZERO TRACE    Vanguards + transport rotation               ║
+║               ──────────    net namespaces + browser compartments        ║
+║                                                                          ║
+║  ░ LAYER 11 — IRON SHIELD   Whitelist firewall + auto-defend daemon      ║
+║               ───────────   exfil detection + canary + IOC scanner       ║
+║                                                                          ║
+╚══════════════════════════════════════════════════════════════════════════╝
+```
+
+</div>
+
+---
+
+## ░▒▓█ `THREAT MATRIX` █▓▒░
+
+<div align="center">
+
+| THREAT | PROTECTION | STRENGTH |
+|--------|-----------|----------|
+| 🔴 ISP traffic monitoring | Tor + DNS lock + kill switch | `██████████ ELIMINATED` |
+| 🔴 IP address exposure | Stream isolation + bridges | `██████████ ELIMINATED` |
+| 🔴 File metadata leaks | mat2 + exiftool + qpdf pipeline | `██████████ ELIMINATED` |
+| 🔴 Physical device seizure | RAM disk + dead man's key + panic | `██████████ ELIMINATED` |
+| 🔴 Traffic timing analysis | 80ms jitter + cover traffic | `█████████░ DEFEATED` |
+| 🔴 Cold-boot RAM attacks | RAM shred + swap off + encrypted disk | `██████████ ELIMINATED` |
+| 🔴 Surveillance devices nearby | RF + NFC + BLE + SDR wideband scan | `█████████░ DETECTED` |
+| 🔴 Guard node deanonymization | Vanguards rotation defense | `██████████ ELIMINATED` |
+| 🔴 Transport fingerprinting | Auto-rotate obfs4/Snowflake/meek | `██████████ ELIMINATED` |
+| 🔴 Future quantum decryption | Kyber-1024 post-quantum KEM | `██████████ ELIMINATED` |
+| 🔴 Single-network deanon | I2P + Tor dual-hop routing | `██████████ ELIMINATED` |
+| 🔴 Boot-level tampering | TPM 2.0 PCR sealing + Secure Boot | `█████████░ DEFEATED` |
+| 🔴 Hardware key theft | YubiKey challenge-response 2FA | `██████████ ELIMINATED` |
+| 🔴 Kernel-level exploits | 50+ modules locked + ptrace disabled | `████████░░ HARDENED` |
+
+</div>
+
+---
+
+## ░▒▓█ `QUICK START` █▓▒░
+
+### Supported Systems
+
+| OS | Support |
+|----|---------|
+| **Tails OS** | ✅ Recommended — amnesic by design |
+| **Whonix** | ✅ Recommended — Tor-routed by design |
+| **Debian 11/12** | ✅ Full support |
+| **Ubuntu 22.04+** | ✅ Full support |
+| **Kali Linux** | ✅ Full support |
+| **macOS / Windows** | ❌ Not supported |
+
+### Deploy
+
+```bash
+# Clone
+git clone https://github.com/LedZy87/SPECTER.git
+cd SPECTER
+
+# ⚠️ Always audit before running as root
 less specter.sh
 
-# 3. Run full setup (requires root)
+# Full deployment — all 11 layers
 sudo bash specter.sh --full
-
-# 4. Set up your USB Dead Man's Key (optional but highly recommended)
-usb-key-setup
-
-# 5. Install Tor Browser (official, GPG-verified)
-tb-install
 ```
 
-### Setup modes
-```bash
-sudo bash specter.sh --full     # Complete setup (all layers)
-sudo bash specter.sh --wizard   # Guided interactive setup
-sudo bash specter.sh --quick    # Essential only (Tor + kill switch + nuke)
-sudo bash specter.sh --stealth  # Minimal footprint mode
-```
-
----
-
-## Usage
-
-### Starting a session
-```bash
-# Option A: USB Dead Man's Key (recommended)
-# Plug in your OPSEC_KEY USB → session activates automatically
-
-# Option B: Manual
-sudo bash specter.sh --full   # first time only
-opsec-enforce start    # activate live monitoring
-tb-start               # launch Tor Browser
-kloak-start            # anonymize keystroke timing
-```
-
-### During a session
-```bash
-opsec-status           # 12-point health check
-leak-test              # comprehensive leak check
-honeypot-check         # detect MITM / DNS hijack
-rf-scan                # scan for surveillance devices
-metadata-check <file>  # check file before sharing
-dots-check <file>      # check for printer tracking dots
-usb-safe /dev/sdb1     # safely open untrusted USB
-```
-
-### Ending a session
-```bash
-session-nuke           # clean end (wipe RAM disk, restore network, clear logs)
-panic                  # emergency wipe (immediate, no confirmation)
-# Or: pull your USB Dead Man's Key for instant nuke
-```
-
----
-
-## Core Commands Reference
-
-### Network & Anonymity
-| Command | Description |
-|---|---|
-| `opsec-status` | 12-point instant health indicator |
-| `leak-test` | One-shot DNS/IP/IPv6/WebRTC leak check |
-| `circuit-status` | Show active Tor circuits (stream isolation) |
-| `bridge-select` | Choose obfs4 / Snowflake / meek-azure bridge |
-| `traffic-pad start` | Add 80ms±30ms timing jitter to traffic |
-| `exit-watch start` | Monitor Tor exit for circuit hijacking |
-| `bad-exit-block` | Block known malicious Tor exit nodes |
-| `honeypot-check` | Detect DNS hijack, ARP spoof, MITM |
-| `ntp-sync` | Sync system clock via Tor only |
-
-### Browser & Comms
-| Command | Description |
-|---|---|
-| `tb-install` | Download + GPG-verify Tor Browser |
-| `tb-start` | Tor Browser (RAM profile, JS off, Safest) |
-| `browser-jail` | Firefox in Firejail + Tor + RAM profile |
-| `comms-start` | Matrix client over Tor (WeeChat) |
-| `voice-start` | Mumble encrypted voice over Tor |
-| `airgap-send <file>` | Split file into QR codes (zero network) |
-| `airgap-receive` | Reassemble file from QR codes |
-| `steg-hide <img> <file>` | Hide file inside innocent image |
-| `steg-reveal <img>` | Extract hidden file from image |
-
-### Document Security
-| Command | Description |
-|---|---|
-| `metadata-check <file>` | Scan for identity/location metadata |
-| `stripall <file>` | Strip all metadata |
-| `sanitize-pdf <file>` | Full PDF sanitization pipeline |
-| `dots-check <file>` | Detect printer tracking dots |
-| `scan-beacons <dir>` | Scan for tracking pixels, URLs, GPS |
-| `usb-safe <device>` | Mount USB isolated, scan, copy to RAM |
-
-### Encryption
-| Command | Description |
-|---|---|
-| `age-encrypt <file>` | Encrypt with age (modern, simple) |
-| `age-decrypt <file>` | Decrypt age-encrypted file |
-| `create-vault` | Create LUKS2 encrypted container |
-| `vc-create` | Create VeraCrypt container |
-| `pm-add <site> <pass>` | Add to encrypted password manager |
-| `note-encrypt` | Encrypt a note to RAM disk |
-
-### Emergency
-| Command | Description |
-|---|---|
-| `panic` | Immediate full system wipe |
-| `quick-nuke` | Fast RAM disk wipe + kill switch |
-| `session-nuke` | Full 14-step clean session end |
-| `physical-panic` | Webcam photo + alarm + lock + nuke |
-| `deadman-start` | Inactivity-based auto-nuke timer |
-| `usb-key-setup` | Format USB as Dead Man's Key |
-
-### Monitoring & Integrity
-| Command | Description |
-|---|---|
-| `opsec-enforce start` | Live: block DNS leaks, swap, non-Tor |
-| `counter-recon start` | Detect port scans and ARP probes |
-| `trip-wire start` | Filesystem + USB tamper detection |
-| `verify-tools` | SHA256 tamper-check critical binaries |
-| `supply-check` | GPG verify packages + rootkit scan |
-| `lockdown-status` | Kernel security parameters |
-| `audit-verify` | Verify HMAC-chained audit log |
-| `entropy-status` | Check cryptographic RNG health |
-
-### System Hardening
-| Command | Description |
-|---|---|
-| `kloak-start` | Keystroke timing anonymization |
-| `screen-guard start` | Block screenshot tools + framebuffer |
-| `os-spoof windows` | TCP/IP fingerprint → Windows 10 |
-| `net-wipe` | Flush ARP/DNS/conntrack/routing |
-| `rf-scan` | Scan for surveillance transmitters |
-| `ram-shred` | Fill free RAM (cold-boot defense) |
-| `mac-rotate start` | Periodic MAC re-randomization |
-| `exit-autoupdate` | Auto-refresh bad exit list (6h cron) |
-
-### v10.9 — Zero Trace Protocol
-| Command | Description |
-|---|---|
-| `vanguards-install` | Install Vanguards guard rotation defense (Tor HS deanon protection) |
-| `vanguards-status` | Check Vanguards daemon status |
-| `transport-rotate now/start/stop` | Auto-cycle obfs4/Snowflake/meek bridges |
-| `ns-isolate start/exec/stop/list` | Per-app kernel network namespace isolation |
-| `compartment-create <name>` | Isolated browser session with own Tor circuit |
-| `compartment-start <name>` | Launch compartmented browser |
-| `compartment-list` | List all compartments |
-| `compartment-wipe <name>` | Securely destroy compartment |
-| `warrant-canary` | Check warrant canaries for key services via Tor |
-| `secureboot-check` | UEFI Secure Boot + bootloader integrity baseline |
-| `secureboot-baseline-reset` | Reset boot baseline after kernel/grub update |
-| `mem-forensics-defense` | Kernel memory anti-forensics hardening |
-| `noise-upgrade start/stop` | Human-pattern cover traffic (burst+quiet cycle) |
-| `tscm-full` | Full TSCM sweep: NFC + BLE + SDR wideband + physical |
-| `guardian-mode start/stop/status` | Single command: ALL protection layers active |
-| `v10-9-status` | v10.9 features status |
-
-### v10.10 — Absolute Zero
-| Command | Description |
-|---|---|
-| `build-specter-usb` | Build bootable Debian Live USB with SPECTER pre-installed (amnesic) |
-| `pq-install` | Install Open Quantum Safe liboqs + Python bindings |
-| `pq-keygen` | Generate Kyber-1024 + Dilithium3 post-quantum keypair |
-| `pq-encrypt <file>` | Post-quantum encrypt: Kyber-1024 KEM + AES-256-GCM |
-| `pq-decrypt <file>` | Post-quantum decrypt |
-| `dualhop-start` | Start I2P + Tor dual-hop daemon (two independent anonymity networks) |
-| `dualhop-exec <cmd>` | Run command through I2P → Tor dual chain |
-| `dualhop-status` | Show dual-hop routing status |
-| `dualhop-stop` | Stop dual-hop daemon |
-| `tpm-check` | Verify TPM 2.0 availability and PCR state |
-| `tpm-seal <secret>` | Seal secret to current hardware boot state (TPM PCRs 0,1,2,3,4,7) |
-| `tpm-unseal` | Unseal secret (only succeeds if boot state unchanged) |
-| `yubikey-setup` | Configure YubiKey for LUKS + sudo hardware 2FA |
-| `yubikey-status` | Show YubiKey authentication status |
-| `hardware-checklist` | Exact hardware buy list + 9-step hardened setup procedure |
-| `v10-10-status` | v10.10 Absolute Zero features status |
-
----
-
-## Threat Model
-
-### What this tool protects against
-
-| Threat | Level | How |
-|---|---|---|
-| ISP traffic monitoring | ✅ Strong | Tor + kill switch + DNS lock |
-| Network-level surveillance | ✅ Strong | Stream isolation + bridge obfuscation |
-| Corporate tracking | ✅ Strong | MAC randomization + metadata stripping |
-| Traffic analysis (size) | ✅ Strong | Packet padding + MTU normalization |
-| Traffic analysis (timing) | ✅ Strong | 80ms±30ms jitter + Tor padding |
-| Document watermarking | ✅ Strong | Beacon scan + metadata strip + dots-check |
-| File metadata leaks | ✅ Strong | mat2 + exiftool + qpdf pipeline |
-| Physical seizure | ✅ Strong | RAM disk + instant nuke + dead man's key |
-| Cold-boot attacks | ✅ Strong | RAM shred + swap off + encrypted RAM disk |
-| Keyloggers (software) | ✅ Good | kloak (timing randomization) |
-| DNS leaks | ✅ Strong | resolv.conf locked + Tor DNS only |
-| WebRTC leaks | ✅ Strong | Browser hardening + media.peerconnection off |
-| Printer tracking | ✅ Good | deda detection + strip |
-| MITM / SSL intercept | ✅ Good | honeypot-check + cert verification |
-| Correlation attacks | ✅ Strong | Stream isolation + Vanguards + human-pattern cover traffic |
-| Targeted endpoint exploit | ✅ Strong | Kernel lockdown + supply chain + mem forensics defense |
-| State-level backbone intercept | ✅ Strong | Tor + bridges + transport rotation + net namespaces |
-| Subpoena / legal compulsion | ⚠️ Moderate | Encrypted containers + deniable storage + warrant canary |
-| Guard node discovery | ✅ Strong | Vanguards guard rotation defense |
-| Transport fingerprinting | ✅ Strong | Auto-rotate obfs4 / Snowflake / meek bridges |
-| Cross-session identity correlation | ✅ Strong | Browser compartments (isolated circuits) |
-| Boot-level tampering | ✅ Good | Secure Boot check + bootloader integrity baseline |
-| Memory forensics | ✅ Strong | Core dump disable + ptrace lock + anti-forensics kernel |
-| Post-quantum decryption (future) | ✅ Strong | Kyber-1024 NIST PQC KEM (quantum-resistant) |
-| Single-network deanonymization | ✅ Strong | I2P + Tor dual-hop (must compromise both networks) |
-| Boot-state secret theft | ✅ Strong | TPM 2.0 PCR sealing + hardware attestation |
-| Password/key theft without hardware | ✅ Strong | YubiKey challenge-response hardware 2FA |
-| Forensics on confiscated live system | ✅ Strong | Amnesic bootable USB (leaves zero traces on host) |
-
-### What software cannot fully protect against
-
-| Threat | Why | Mitigation |
-|---|---|---|
-| Hardware implants | Physical — no software fix | Clean hardware, RF scan |
-| Mobile phone in the room | Separate device | Faraday bag or remove phone |
-| State backbone correlation (at scale) | Infrastructure access | Multiple hops + Tor bridges |
-| Human OPSEC mistakes | Social/behavioral | Training + opsec-enforce |
-| Physical coercion | Legal/physical | Deniable encryption + dead man's switch |
-| Zero-day kernel exploits | Unknown vulnerabilities | Kernel lockdown reduces surface |
-
----
-
-## Building from Source
-
-The final script is assembled from 19 modules:
+### Modes
 
 ```bash
-# Build latest version
-bash specter_build.sh
-
-# Module structure
-modules/
-├── v10_core.sh          # Globals, logging, config, OS detection
-├── v10_7_anim.sh        # Animation system (matrix rain, spinners, etc.)
-├── v10_harden.sh        # 15-layer system hardening
-├── v10_network.sh       # Tor, VPN, DNS, kill switch, I2P
-├── v10_anonymity.sh     # Identity, PGP, watermarks, OnionShare
-├── v10_crypto.sh        # Age, VeraCrypt, LUKS, password manager
-├── v10_documents.sh     # PDF/doc sanitize, beacon scan, quarantine
-├── v10_sources.sh       # SecureDrop, dead drops, source auth
-├── v10_emergency.sh     # Panic, dead man, duress, nuke
-├── v10_monitor.sh       # Leak/LAN/anomaly/correlation monitoring
-├── v10_tools.sh         # OPSEC score, dashboard, reports
-├── v10_5_extras.sh      # v10.5: exit-watch, mac-rotate, opsec-status...
-├── v10_6_extras.sh      # v10.6: USB key, air-gap, printer dots, kloak...
-├── v10_7_extras.sh      # v10.7: honeypot, steg, counter-recon, browser-jail...
-├── v10_8_extras.sh      # v10.8: stream isolation, Tor Browser, kernel lockdown...
-├── v10_9_extras.sh      # v10.9: Vanguards, transport rotation, namespaces, compartments...
-├── v10_10_extras.sh     # v10.10: post-quantum, dual-hop, TPM, YubiKey, bootable USB...
-├── v10_11_extras.sh     # v10.11: fortress firewall, auto-defend, exfil-detect, canary, IOC scan...
-└── v10_menus.sh         # All menus + CLI entrypoint
+sudo bash specter.sh --full      # ████ Everything. Maximum protection.
+sudo bash specter.sh --wizard    # ███░ Guided interactive setup
+sudo bash specter.sh --quick     # ██░░ Essential: Tor + kill switch + nuke
+sudo bash specter.sh --stealth   # █░░░ Minimal footprint mode
 ```
 
 ---
 
-## Environment Variables
+## ░▒▓█ `DAILY OPERATION` █▓▒░
 
 ```bash
-ANIM_ENABLED=0        # Disable all animations (useful for CI/servers)
-ANIM_SPEED=fast       # Animation speed: fast | normal | slow
-RAMDISK_MOUNT=/custom # Custom RAM disk mount point
+# ── SESSION START ──────────────────────────────────────
+opsec-enforce start    # activate all live monitoring
+tb-start               # launch GPG-verified Tor Browser
+kloak-start            # anonymize keystroke timing patterns
+guardian-mode start    # single command: ALL layers active
+
+# ── HEALTH CHECK ───────────────────────────────────────
+opsec-status           # 12-point instant health indicator
+leak-test              # DNS / IP / IPv6 / WebRTC leak check
+honeypot-check         # detect MITM / DNS hijack / ARP spoof
+rf-scan                # scan area for surveillance transmitters
+
+# ── FILE SECURITY ──────────────────────────────────────
+metadata-check <file>  # scan for hidden identity metadata
+dots-check <file>      # detect printer tracking dots
+stripall <file>        # wipe everything — full sanitization
+sanitize-pdf <file>    # complete PDF decontamination pipeline
+
+# ── ENCRYPTION ─────────────────────────────────────────
+age-encrypt <file>     # modern encryption (post-quantum ready)
+pq-encrypt <file>      # Kyber-1024 post-quantum encryption
+create-vault           # LUKS2 encrypted container
+steg-hide <img> <file> # hide file inside innocent image
+
+# ── SESSION END ────────────────────────────────────────
+session-nuke           # 14-step clean wipe — no traces
+panic                  # EMERGENCY — immediate, no confirmation
+# or just: pull your USB Dead Man's Key
 ```
 
 ---
 
-## Authorship
+## ░▒▓█ `IRON SHIELD — v10.11` █▓▒░
 
-**SPECTER** is created and maintained by **LedZy**.
+The latest release adds **active defense** — SPECTER doesn't just protect, it fights back.
 
-Authorship proof token: `TGVkWnk6U1BFQ1RFUjoyMDI1`
-
-Verify: `echo 'TGVkWnk6U1BFQ1RFUjoyMDI1' | base64 -d`
-
----
-
-## Legal & Ethical Use
-
-This tool is designed for **security researchers, privacy advocates, human rights workers, and anyone who needs to protect their communications and data from surveillance**.
-
-**Legitimate uses:**
-- Protecting private communications
-- Investigating organized crime, corruption, or human rights abuses
-- Security research and education
-- Privacy protection in high-risk environments
-
-**This tool does not:**
-- Bypass any specific organization's systems
-- Provide any offensive capabilities
-- Enable anything not already possible with standard Linux tools
-
-Users are responsible for compliance with applicable laws in their jurisdiction.
+```
+fortress-mode      → whitelist-only firewall, everything else DROPPED
+auto-defend        → detects attacks, responds automatically in real-time
+exfil-detect       → catches data trying to leave without permission
+port-knock         → your machine is invisible until you knock correctly
+canary-deploy      → honeypot traps — know the moment someone probes you
+ioc-scan           → scan for known threat indicators across your system
+proc-harden        → lock down every running process
+sysctl-max         → kernel parameters pushed to absolute security limits
+log-fortify        → tamper-proof, HMAC-chained audit trail
+guardian-mode      → one command activates EVERYTHING simultaneously
+```
 
 ---
 
-## Contributing
+## ░▒▓█ `ABSOLUTE ZERO — v10.10` █▓▒░
 
-1. Fork the repository
-2. Create a feature branch: `git checkout -b feature/new-module`
-3. Write your module following the existing pattern
-4. Add it to the build script
-5. Ensure `bash -n specter.sh` passes
-6. Submit a pull request
+For those operating in the most hostile environments on earth.
 
----
-
-## Changelog
-
-| Version | Lines | Key additions |
-|---|---|---|
-| v10.11.0 | 14,500+ | Iron Shield: fortress-mode whitelist firewall, auto-defend attack daemon, exfil detection, port knocking, canary honeypots, IOC scanner, proc-harden, sysctl-max, log-fortify |
-| v10.10.0 | 13,500+ | Absolute Zero: bootable amnesic Live USB, post-quantum Kyber-1024+Dilithium3 encryption, I2P+Tor dual-hop routing, TPM 2.0 attestation + PCR sealing, YubiKey hardware 2FA, hardware buy checklist |
-| v10.9.0 | 12,000+ | Zero Trace Protocol: Vanguards guard rotation, transport auto-rotation, net namespace isolation, browser compartments, warrant canary monitor, Secure Boot check, memory forensics defense, human-pattern cover traffic, full TSCM sweep (NFC+BLE+SDR), guardian mode |
-| v10.8.0 | 10,194 | Stream isolation, Tor Browser verified, kernel lockdown, supply chain, OPSEC enforcer, entropy boost, HMAC audit log, RF detection, bridge obfuscation |
-| v10.7.0 | 8,989 | Animations (matrix rain, typewriter, glitch), honeypot check, steganography, counter-recon, decoy traffic, browser jail, OS spoof, tripwire |
-| v10.6.0 | 7,653 | USB Dead Man's Key, air-gap QR transfer, printer dot detection, keystroke anonymizer, USB isolation |
-| v10.5.0 | 6,603 | Exit watch, mac-rotate, leak test, RAM shred, metadata check, TCP hardening |
-| v10.0.0 | 5,787 | Full rewrite: 11 modules, 120+ commands |
+```
+pq-keygen          → Kyber-1024 + Dilithium3 post-quantum keypair
+pq-encrypt         → quantum-resistant file encryption
+dualhop-start      → route through I2P AND Tor simultaneously
+tpm-seal           → bind secrets to your exact hardware boot state
+yubikey-setup      → hardware token — no key, no access. ever.
+build-specter-usb  → bootable amnesic USB — leaves zero traces on host
+```
 
 ---
 
-## License
+## ░▒▓█ `VERSION HISTORY` █▓▒░
 
-MIT License — see [LICENSE](LICENSE)
+<div align="center">
+
+```
+v10.11.0  ████████████████████  14,500+ lines  IRON SHIELD
+v10.10.0  ██████████████████░░  13,500+ lines  ABSOLUTE ZERO
+v10.9.0   ████████████████░░░░  12,000+ lines  ZERO TRACE PROTOCOL
+v10.8.0   ██████████████░░░░░░  10,194  lines  KERNEL LOCKDOWN
+v10.7.0   ████████████░░░░░░░░   8,989  lines  ANIMATIONS + RECON
+v10.6.0   ██████████░░░░░░░░░░   7,653  lines  USB DEAD MAN'S KEY
+v10.5.0   ████████░░░░░░░░░░░░   6,603  lines  LEAK TEST + RF
+v10.0.0   ██████░░░░░░░░░░░░░░   5,787  lines  FULL REWRITE
+```
+
+</div>
+
+---
+
+## ░▒▓█ `LEGAL & ETHICS` █▓▒░
+
+> SPECTER is built for **security researchers, privacy advocates, journalists, human rights workers, and anyone who believes privacy is a fundamental right — not a crime.**
+
+This tool provides no offensive capabilities. It does not bypass any specific organization's systems. Every feature uses standard, publicly available Linux tooling. Users are responsible for compliance with laws in their jurisdiction.
+
+---
+
+## ░▒▓█ `AUTHOR` █▓▒░
+
+<div align="center">
+
+```
+╔══════════════════════════════════════════════════════╗
+║                                                      ║
+║   SPECTER is built and maintained by LedZy           ║
+║                                                      ║
+║   Authorship proof token:                            ║
+║   TGVkWnk6U1BFQ1RFUjoyMDI1                          ║
+║                                                      ║
+║   Verify: echo 'TGVkWnk6U1BFQ1RFUjoyMDI1' | base64 -d ║
+║                                                      ║
+╚══════════════════════════════════════════════════════╝
+```
+
+[![GitHub Profile](https://img.shields.io/badge/GitHub-LedZy87-ff0000?style=for-the-badge&logo=github&logoColor=white)](https://github.com/LedZy87)
+[![Star SPECTER](https://img.shields.io/badge/⭐_Star_this_repo-ff0000?style=for-the-badge)](https://github.com/LedZy87/SPECTER/stargazers)
+[![Website](https://img.shields.io/badge/🌍_vpmindustria.eu-ff0000?style=for-the-badge)](https://vpmindustria.eu)
+
+</div>
+
+---
+
+<div align="center">
+
+![visitors](https://komarev.com/ghpvc/?username=LedZy87&color=ff0000&style=for-the-badge&label=EYES+ON+THIS+REPO)
+
+```
+╔══════════════════════════════════════════╗
+║                                          ║
+║   [ SPECTER v10.11.0 — IRON SHIELD ]     ║
+║   [ BUILT BY LEDZY                 ]     ║
+║   [ ALL LOGS WIPED                 ]     ║
+║   [ YOU WERE NEVER HERE            ]     ║
+║                                          ║
+╚══════════════════════════════════════════╝
+```
+
+<img width="100%" src="https://capsule-render.vercel.app/api?type=waving&color=0:ff0000,40:330000,70:1a0000,100:0d0d0d&height=150&section=footer&animation=fadeIn"/>
+
+</div>
